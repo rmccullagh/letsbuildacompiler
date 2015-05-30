@@ -35,7 +35,7 @@ int match(parser_t* self, char c)
 		next(self);
 		return 1;
 	} else {
-		printf("expected %c\n", c);
+		printf("Expected %c\n", c);
 		exit(1);
 	}
 }
@@ -87,9 +87,63 @@ void init(parser_t* self)
 	next(self);
 }
 
+/*
+ * the term leaves the result in register 0
+ * R0
+ */
+void term(parser_t* self)
+{
+	printf("LA R0,%lli\n", getNumber(self));
+}
+
 void expression(parser_t* self)
 {
-	printf("LA R0, %lli\n", getNumber(self));
+	/* get a number in R0 */
+	term(self);
+	/* at this point there is already a number in R0 */
+	expression:
+		while(self->look) {
+			/*
+			 * load contents of R0 into R1. Copy the contents of R1 to R0
+			 * because term() uses R0 exclusively, and both add() and subtract()
+			 * call term(), therefore if we don't copy the content, we'll lose
+			 * the left hand operand in <term> +|- <term>
+			 */
+			printf("LR R1,R0\n");
+			switch(self->look) {
+				case '+':
+					/* add is responsible for populating R0 */
+					add(self);
+					goto expression;
+				break;
+				case '-':
+					/* subtract is responsible for populating R0 */
+					subtract(self);
+					goto expression;
+				break;
+				default:
+					expected("+ or -");
+				break;
+			}
+		}
+}
+
+void add(parser_t* self)
+{
+	match(self, '+');
+	/* term puts a number in R0 */
+	term(self);
+	/* ADD R1 AND R0 AND STORE IT IN R0 */
+	printf("AR R1,R0\n");
+}
+
+void subtract(parser_t* self)
+{
+	match(self, '-');
+	/* term puts a number in R0 */
+	term(self);
+	/* SUB R1 AND R0 AND STORE IT IN R0 */
+	printf("SR R1,R0\n");
 }
 
 void init_parser(parser_t* self, char* text)
