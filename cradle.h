@@ -20,11 +20,11 @@
 #include <stddef.h>
 
 typedef struct {
-		char* text; /* source code */
-		size_t pos; /* current position in text */
-		size_t len; /* length of text */
-		char look;	/* lookahead character */
-		int status; /* weather we are at EOF */
+	char* text; /* source code */
+	size_t pos; /* current position in text */
+	size_t len; /* length of text */
+	char look;	/* lookahead character */
+	int status; /* weather we are at EOF */
 } parser_t;
 
 char look;
