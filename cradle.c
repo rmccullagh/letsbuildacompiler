@@ -126,6 +126,7 @@ void expression(parser_t* self)
 				break;
 			}
 		}
+		printf("HALT\n");
 }
 
 void add(parser_t* self)
