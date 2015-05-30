@@ -27,8 +27,11 @@ int main(int argc, char** argv)
 	if(!parser) {
 		return 1;
 	}
-	
-	init_parser(parser, argv[1]);	
+	int status = init_parser(parser, argv[1]);
+	if(status == 1) {
+		free(parser);
+		return 1;
+	}
 	init(parser);
 	expression(parser);
 
