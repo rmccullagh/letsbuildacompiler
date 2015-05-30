@@ -42,12 +42,30 @@ int match(parser_t* self, char c)
 	}
 }
 
-char getName(parser_t* self)
+char* getName(parser_t* self)
 {
+	int buffer_size = D_NAME_SIZE;
+	int i = 0;
+	char* buffer = malloc(D_NAME_SIZE);
+	if(buffer == NULL) {
+		return NULL;
+	}
 	if(!isalpha((int)self->look)) {
 		expected(self, "char");
 	} 
-	return self->look;
+	while(isalnum((int)self->look)) {
+		if(i == buffer_size) {
+			buffer_size *= 2;
+			buffer = realloc(buffer, buffer_size);
+			if(buffer == NULL) {
+				return NULL;
+			}
+		}
+		buffer[i++] = self->look;
+		next(self);
+	}
+	buffer[i] = '\0';
+	return buffer;
 }
 
 /*

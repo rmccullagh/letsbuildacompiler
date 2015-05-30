@@ -31,7 +31,7 @@ char look;
 
 void expected(parser_t*, const char*) __attribute__ ((noreturn));
 int match(parser_t*, char);
-char getName(parser_t*);
+char* getName(parser_t*);
 long long int getNumber(parser_t*);
 void init(parser_t*);
 void term(parser_t*);
