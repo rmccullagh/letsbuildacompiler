@@ -29,7 +29,7 @@ typedef struct {
 
 char look;
 
-void expected(const char*) __attribute__ ((noreturn));
+void expected(parser_t*, const char*) __attribute__ ((noreturn));
 int match(parser_t*, char);
 char getName(parser_t*);
 long long int getNumber(parser_t*);
@@ -38,7 +38,8 @@ void term(parser_t*);
 void expression(parser_t*);
 void add(parser_t*);
 void subtract(parser_t*);
-void init_parser(parser_t*, char* text);
+int init_parser(parser_t*, char* text);
+void parser_shutdown(parser_t*);
 void next(parser_t*);
 
 #endif /* __CRADLE_H__ */

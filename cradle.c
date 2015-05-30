@@ -23,9 +23,10 @@
 
 #define D_NAME_SIZE 16
 
-void expected(const char* s)
+void expected(parser_t* self, const char* s)
 {
 	printf("Exepcted %s\n", s);
+	parser_shutdown(self);
 	exit(1);
 }
 
@@ -36,6 +37,7 @@ int match(parser_t* self, char c)
 		return 1;
 	} else {
 		printf("Expected %c\n", c);
+		parser_shutdown(self);
 		exit(1);
 	}
 }
@@ -43,7 +45,7 @@ int match(parser_t* self, char c)
 char getName(parser_t* self)
 {
 	if(!isalpha((int)self->look)) {
-		expected("char");
+		expected(self, "char");
 	} 
 	return self->look;
 }
@@ -62,7 +64,7 @@ long long int getNumber(parser_t* self)
 		return 0;
 	}
 	if(!isdigit((int)self->look)) {
-		expected("integer");
+		expected(self, "integer");
 	} else {
 		while(isdigit((int)self->look)) {
 			if(i == buffer_size) {
@@ -122,7 +124,7 @@ void expression(parser_t* self)
 					goto expression;
 				break;
 				default:
-					expected("+ or -");
+					expected(self, "+ or -");
 				break;
 			}
 		}
@@ -147,13 +149,27 @@ void subtract(parser_t* self)
 	printf("SR R1,R0\n");
 }
 
-void init_parser(parser_t* self, char* text)
+/*
+ * init the parser
+ * return 1 on error, 0 on success. The caller must check for 1.
+ */
+int init_parser(parser_t* self, char* text)
 {
-	self->text = text;
+	self->text = strdup(text);
+	if(self->text == NULL) {
+		return 1;
+	}
 	self->pos = 0;
 	self->len = strlen(text);
 	self->look = EOF;
 	self->status = 0;
+	return 0;
+}
+
+void parser_shutdown(parser_t* self)
+{
+	free(self->text);
+	free(self);
 }
 
 void next(parser_t* self)
