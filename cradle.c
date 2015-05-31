@@ -107,7 +107,7 @@ void init(parser_t* self)
 	next(self);
 }
 
-void factor(parser_t*)
+void factor(parser_t* self)
 {
 	printf("LA R0, %lli\n", getNumber(self));
 }
