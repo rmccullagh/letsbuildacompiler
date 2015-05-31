@@ -27,8 +27,6 @@ typedef struct {
 	int status; /* weather we are at EOF */
 } parser_t;
 
-char look;
-
 void expected(parser_t*, const char*) __attribute__ ((noreturn));
 int match(parser_t*, char);
 char* getName(parser_t*);
