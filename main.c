@@ -34,6 +34,6 @@ int main(int argc, char** argv)
 	}
 	init(parser);
 	expression(parser);
-
+	parser_shutdown(parser);
 	return 0;
 }
