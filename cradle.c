@@ -107,6 +107,10 @@ void init(parser_t* self)
 	next(self);
 }
 
+void factor(parser_t*)
+{
+	printf("LA R0, %lli\n", getNumber(self));
+}
 /*
  * the term leaves the result in register 0
  * R0

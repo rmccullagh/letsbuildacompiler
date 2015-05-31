@@ -34,6 +34,7 @@ int match(parser_t*, char);
 char* getName(parser_t*);
 long long int getNumber(parser_t*);
 void init(parser_t*);
+void factor(parser_t*);
 void term(parser_t*);
 void expression(parser_t*);
 void add(parser_t*);
