@@ -207,6 +207,14 @@ int init_parser(parser_t* self, char* text)
 
 void parser_shutdown(parser_t* self)
 {
+	#ifdef DEBUG
+		fprintf(stderr, "*** debug info ***\n");
+		fprintf(stderr, "total lines   : %d\n", self->line);
+		fprintf(stderr, "source length : %zu\n", self->len);
+		fprintf(stderr, "last position : %zu\n", self->pos);
+		fprintf(stderr, "last status   : %d\n", self->status);
+		fprintf(stderr, "*** end debug info ***\n");
+	#endif
 	free(self->text);
 	free(self);
 }
