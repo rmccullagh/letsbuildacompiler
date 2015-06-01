@@ -25,8 +25,10 @@
 
 static inline void skip_white(parser_t* self)
 {
-	while(self->look == '\n') {
-		self->line++;
+	while(self->look == '\n' || self->look == ' ') {
+		if(self->look == '\n') {
+			self->line++;
+		}
 		next(self);
 	}
 }
