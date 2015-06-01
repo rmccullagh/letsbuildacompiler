@@ -23,8 +23,9 @@ typedef struct {
 	char* text; /* source code */
 	size_t pos; /* current position in text */
 	size_t len; /* length of text */
-	char look;	/* lookahead character */
+	char look;  /* lookahead character */
 	int status; /* weather we are at EOF */
+	int line;   /* the current line number, also total lines */
 } parser_t;
 
 void expected(parser_t*, const char*) __attribute__ ((noreturn));
