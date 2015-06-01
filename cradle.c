@@ -25,7 +25,7 @@
 
 static inline void skip_white(parser_t* self)
 {
-	while(self->look == '\n' || self->look == ' ') {
+	while(self->look == '\r' || self->look == '\n' || self->look == '\t' || self->look == ' ') {
 		if(self->look == '\n') {
 			self->line++;
 		}
@@ -36,12 +36,15 @@ static inline void skip_white(parser_t* self)
 void expected(parser_t* self, const char* s)
 {
 	switch(self->look) {
-		case '\0':
-			printf("error: expecting %s, but got an unexpected EOF on line %d\n", s, self->line);
-		break;
 		case '\t':
 			printf("error: expecting %s, but got an unexpected \"\\t\" on line %d\n", s, self->line);
 		break;
+		case '\r':
+			printf("error: expecting %s, but got an unexpected \"\\r\" on line %d\n", s, self->line);
+		break;
+		case '\0':
+			printf("error: expecting %s, but got an unexpected EOF on line %d\n", s, self->line);
+        break;
 		default:
 			printf("error: expecting %s, but got an unexpected \"%c\" on line %d\n", s, self->look, self->line);
 		break;
@@ -238,6 +241,14 @@ void next(parser_t* self)
 		self->look = '\0';
 	} else {
 		self->look = self->text[self->pos++];
+		if(!((self->look >= 20) && (self->look <= 126))) {
+			if(self->look == '\r' || self->look == '\n' || self->look == '\t') {
+				return;
+			}
+			printf("error: unexpected illegal character on line %d\n", self->line);
+			parser_shutdown(self);
+			exit(1);
+		}
 	}
 }
 
