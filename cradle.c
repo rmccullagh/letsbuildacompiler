@@ -43,7 +43,7 @@ void expected(parser_t* self, const char* s)
 			printf("error: expecting %s, but got an unexpected \"\\r\" on line %d\n", s, self->line);
 		break;
 		case '\0':
-			printf("error: expecting %s, but got an unexpected EOF on line %d\n", s, self->line);
+			printf("error: expecting %s, but got an unexpected end of file on line %d\n", s, self->line);
         break;
 		default:
 			printf("error: expecting %s, but got an unexpected \"%c\" on line %d\n", s, self->look, self->line);
