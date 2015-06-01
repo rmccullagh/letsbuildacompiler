@@ -33,7 +33,17 @@ static inline void skip_white(parser_t* self)
 
 void expected(parser_t* self, const char* s)
 {
-	printf("Exepcted %s\n", s);
+	switch(self->look) {
+		case '\0':
+			printf("error: expecting %s, but got an unexpected EOF on line %d\n", s, self->line);
+		break;
+		case '\t':
+			printf("error: expecting %s, but got an unexpected \"\\t\" on line %d\n", s, self->line);
+		break;
+		default:
+			printf("error: expecting %s, but got an unexpected \"%c\" on line %d\n", s, self->look, self->line);
+		break;
+	}
 	parser_shutdown(self);
 	exit(1);
 }
