@@ -1,2 +1,2 @@
 #!/bin/bash
-cc -Wall -Wextra cradle.c main.c -o main
+cc $@ -Wall -Wextra cradle.c main.c -o main
