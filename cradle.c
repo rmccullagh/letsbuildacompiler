@@ -172,6 +172,10 @@ void expression(parser_t* self)
 					subtract(self);
 					goto expression;
 				break;
+				case ';':
+					match(self, ';');
+					return;
+				break;
 				case '\0':
 					goto finish;
 				break;
