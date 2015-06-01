@@ -23,6 +23,14 @@
 
 #define D_NAME_SIZE 16
 
+static inline void skip_white(parser_t* self)
+{
+	while(self->look == '\n') {
+		self->line++;
+		next(self);
+	}
+}
+
 void expected(parser_t* self, const char* s)
 {
 	printf("Exepcted %s\n", s);
@@ -74,6 +82,7 @@ char* getName(parser_t* self)
  */
 long long int getNumber(parser_t* self)
 {
+	skip_white(self);
 	int buffer_size = D_NAME_SIZE;
 	long long int out = 0;
 	int i = 0;
@@ -104,6 +113,7 @@ long long int getNumber(parser_t* self)
 
 void init(parser_t* self)
 {
+	skip_white(self);
 	next(self);
 }
 
@@ -127,30 +137,36 @@ void expression(parser_t* self)
 	/* at this point there is already a number in R0 */
 	expression:
 		while(self->look) {
+			skip_white(self);
 			/*
 			 * load contents of R0 into R1. Copy the contents of R1 to R0
 			 * because term() uses R0 exclusively, and both add() and subtract()
 			 * call term(), therefore if we don't copy the content, we'll lose
 			 * the left hand operand in <term> +|- <term>
 			 */
-			printf("LR R1,R0\n");
 			switch(self->look) {
 				case '+':
+					printf("LR R1,R0\n");
 					/* add is responsible for populating R0 */
 					add(self);
 					goto expression;
 				break;
 				case '-':
+					printf("LR R1,R0\n");
 					/* subtract is responsible for populating R0 */
 					subtract(self);
 					goto expression;
+				break;
+				case '\0':
+					goto finish;
 				break;
 				default:
 					expected(self, "+ or -");
 				break;
 			}
 		}
-		printf("HALT\n");
+		finish:
+			printf("HALT\n");
 }
 
 void add(parser_t* self)
@@ -185,6 +201,7 @@ int init_parser(parser_t* self, char* text)
 	self->len = strlen(text);
 	self->look = EOF;
 	self->status = 0;
+	self->line = 1;
 	return 0;
 }
 
@@ -199,10 +216,9 @@ void next(parser_t* self)
 	if(self->pos >= self->len) {
 		self->status = EOF;
 		self->look = '\0';
-		return;
+	} else {
+		self->look = self->text[self->pos++];
 	}
-	
-	self->look = self->text[self->pos++];
 }
 
 
