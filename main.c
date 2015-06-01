@@ -33,7 +33,9 @@ int main(int argc, char** argv)
 		return 1;
 	}
 	init(parser);
-	expression(parser);
+	while(parser->status != EOF) {
+		expression(parser);
+	}
 	parser_shutdown(parser);
 	return 0;
 }
